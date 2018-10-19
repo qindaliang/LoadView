@@ -1,6 +1,7 @@
 package com.qin.loadview;
 
 import android.content.Context;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,20 +12,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class LoadingLayout extends FrameLayout {
+public class LoadingLayout extends FrameLayout implements View.OnClickListener {
 
     public final static int SUCCESS = 1;
     public final static int EMPTY = 2;
     public final static int ERROR = 3;
     public final static int NONETWORK = 4;
     public final static int LOADING = 5;
-    @BindView(R.id.iv_empty)
-    ImageView ivEmpty;
-    @BindView(R.id.tv_empty)
-    TextView tvEmpty;
+
     private Context mContext;
     private View mLoadingPage;
     private View mErrorPage;
@@ -33,6 +28,17 @@ public class LoadingLayout extends FrameLayout {
     private View mContentView;
     private View mCustomLoadingView;
     private int mStatus;
+    private OnReloadListener mListener;
+    private ImageView ivEmpty;
+    private TextView tvEmpty;
+    private TextView tvErrorReload;
+    private TextView tvError;
+    private ImageView ivError;
+    private ImageView ivNonetwork;
+    private TextView tvNonetwork;
+    private TextView tvNonetworkReload;
+
+
 
     public LoadingLayout(@NonNull Context context) {
         this(context, null);
@@ -45,6 +51,8 @@ public class LoadingLayout extends FrameLayout {
     public LoadingLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
+
+
     }
 
     @Override
@@ -69,10 +77,19 @@ public class LoadingLayout extends FrameLayout {
         mNoNetWorkPage = LayoutInflater.from(mContext).inflate(R.layout.nonetwork_page, null, false);
         mErrorPage = LayoutInflater.from(mContext).inflate(R.layout.error_page, null, false);
         mLoadingPage = LayoutInflater.from(mContext).inflate(R.layout.loading_page, null, false);
-        ButterKnife.bind(mEmptyPage);
 
-//        ImageView ivEmpty = mEmptyPage.findViewById(R.id.iv_empty);
-//        TextView tvEmpty = mEmptyPage.findViewById(R.id.tv_empty);
+        ivEmpty = mEmptyPage.findViewById(R.id.iv_empty);
+        tvEmpty = mEmptyPage.findViewById(R.id.tv_empty);
+
+        tvError = mErrorPage.findViewById(R.id.tv_error);
+        ivError = mErrorPage.findViewById(R.id.iv_error);
+        tvErrorReload = mErrorPage.findViewById(R.id.tv_error_reload);
+        tvErrorReload.setOnClickListener(this);
+
+        ivNonetwork = mNoNetWorkPage.findViewById(R.id.iv_nonetwork);
+        tvNonetwork = mNoNetWorkPage.findViewById(R.id.tv_nonetwork);
+        tvNonetworkReload = mNoNetWorkPage.findViewById(R.id.tv_nonetwork_reload);
+        tvNonetworkReload.setOnClickListener(this);
 
     }
 
@@ -130,7 +147,7 @@ public class LoadingLayout extends FrameLayout {
      *
      * @param view
      */
-    public void setVisiable(View view) {
+    private void setVisiable(View view) {
         mContentView.setVisibility(GONE);
         mEmptyPage.setVisibility(GONE);
         mErrorPage.setVisibility(GONE);
@@ -154,6 +171,58 @@ public class LoadingLayout extends FrameLayout {
         this.addView(view);
         view.setVisibility(GONE);
         return this;
+    }
+
+    public LoadingLayout setEmptyText(String text) {
+        tvEmpty.setText(text);
+        return this;
+    }
+
+    public LoadingLayout setEmptyImg(@DrawableRes int id) {
+        ivEmpty.setImageResource(id);
+        return this;
+    }
+
+    public LoadingLayout setErrorImg(@DrawableRes int id) {
+        ivError.setImageResource(id);
+        return this;
+    }
+
+    public LoadingLayout setErrorText(String text) {
+        tvError.setText(text);
+        return this;
+    }
+
+    public LoadingLayout setNoNetworkText(String text) {
+        tvNonetwork.setText(text);
+        return this;
+    }
+
+    public LoadingLayout setNoNetworkImg(@DrawableRes int id) {
+        ivNonetwork.setImageResource(id);
+        return this;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv_error_reload:
+                if (mListener != null)
+                    mListener.onReload(view);
+                break;
+            case R.id.tv_nonetwork_reload:
+                if (mListener != null)
+                    mListener.onReload(view);
+                break;
+        }
+    }
+
+    public interface OnReloadListener {
+        void onReload(View v);
+    }
+
+    public void setOnReloadListener(OnReloadListener onReloadListener) {
+        this.mListener = onReloadListener;
     }
 
     /**
