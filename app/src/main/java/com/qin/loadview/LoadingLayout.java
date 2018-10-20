@@ -1,8 +1,11 @@
 package com.qin.loadview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -37,8 +40,8 @@ public class LoadingLayout extends FrameLayout implements View.OnClickListener {
     private ImageView ivNonetwork;
     private TextView tvNonetwork;
     private TextView tvNonetworkReload;
-
-
+    private int mBackground;
+    private boolean mIsFirstView;
 
     public LoadingLayout(@NonNull Context context) {
         this(context, null);
@@ -51,8 +54,10 @@ public class LoadingLayout extends FrameLayout implements View.OnClickListener {
     public LoadingLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.mContext = context;
-
-
+        TypedArray a = mContext.obtainStyledAttributes(R.styleable.LoadingLayout);
+        mBackground = a.getColor(R.styleable.LoadingLayout_isFirstView, mContext.getResources().getColor(R.color.default_loading_background));
+        mIsFirstView = a.getBoolean(R.styleable.LoadingLayout_isFirstView, false);
+        a.recycle();
     }
 
     @Override
@@ -90,6 +95,22 @@ public class LoadingLayout extends FrameLayout implements View.OnClickListener {
         tvNonetwork = mNoNetWorkPage.findViewById(R.id.tv_nonetwork);
         tvNonetworkReload = mNoNetWorkPage.findViewById(R.id.tv_nonetwork_reload);
         tvNonetworkReload.setOnClickListener(this);
+
+        mEmptyPage.setBackgroundColor(mBackground);
+        mNoNetWorkPage.setBackgroundColor(mBackground);
+        mErrorPage.setBackgroundColor(mBackground);
+        mLoadingPage.setBackgroundColor(mBackground);
+
+        tvError.setText(mBuilder.errorStr);
+        tvEmpty.setText(mBuilder.emptyStr);
+        tvNonetworkReload.setText(mBuilder.netwrokStr);
+        ivError.setImageResource(mBuilder.errorImg);
+        ivEmpty.setImageResource(mBuilder.emptyImg);
+        ivNonetwork.setImageResource(mBuilder.nonetworkImg);
+        tvErrorReload.setBackgroundResource(mBuilder.reloadImg);
+        tvNonetworkReload.setBackgroundResource(mBuilder.reloadImg);
+        tvErrorReload.setText(mBuilder.reloadBtnStr);
+        tvNonetworkReload.setText(mBuilder.reloadBtnStr);
 
     }
 
@@ -230,5 +251,84 @@ public class LoadingLayout extends FrameLayout implements View.OnClickListener {
      */
     @IntDef({SUCCESS, EMPTY, ERROR, NONETWORK, LOADING})
     private @interface Status {
+    }
+
+    private static Builder mBuilder = new Builder();
+
+    public static Builder Builder() {
+        return mBuilder;
+    }
+
+    public static class Builder {
+        private String emptyStr = "暂无数据";
+        private String errorStr = "加载失败，请稍后重试···";
+        private String netwrokStr = "无网络连接，请检查网络···";
+        private String reloadBtnStr = "点击重试";
+        private int emptyImg = R.mipmap.empty;
+        private int errorImg = R.mipmap.error;
+        private int nonetworkImg = R.mipmap.no_network;
+        private int reloadImg = R.drawable.selector_reload_background;
+        private int loadingLayout = R.layout.loading_page;
+        private View loadingView = null;
+        private int backgroundColor = R.color.default_loading_background;
+
+        public Builder setErrorText(@NonNull String text) {
+            errorStr = text;
+            return mBuilder;
+        }
+
+        public Builder setEmptyText(@NonNull String text) {
+
+            emptyStr = text;
+            return this;
+        }
+
+        public Builder setNoNetworkText(@NonNull String text) {
+
+            netwrokStr = text;
+            return this;
+        }
+
+        public Builder setReloadButtonText(@NonNull String text) {
+
+            reloadBtnStr = text;
+            return this;
+        }
+
+        public Builder setErrorImage(@DrawableRes int id) {
+
+            errorImg = id;
+            return this;
+        }
+
+        public Builder setEmptyImage(@DrawableRes int id) {
+
+            emptyImg = id;
+            return this;
+        }
+
+        public Builder setNoNetworkImage(@DrawableRes int id) {
+
+            nonetworkImg = id;
+            return this;
+        }
+
+        public Builder setLoadingPageLayout(@LayoutRes int id) {
+
+            loadingLayout = id;
+            return this;
+        }
+
+        public Builder setLoadingPageView(View view) {
+
+            this.loadingView = view;
+            return this;
+        }
+
+        public Builder setAllPageBackgroundColor(@ColorRes int color) {
+
+            backgroundColor = color;
+            return this;
+        }
     }
 }

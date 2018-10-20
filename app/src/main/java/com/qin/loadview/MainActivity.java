@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mLoadView = findViewById(R.id.loadview);
-        mLoadView.setEmptyImg(R.mipmap.empty).setEmptyText("当前没有数据");
+ //       mLoadView.setEmptyImg(R.mipmap.empty).setEmptyText("当前没有数据");
         mLoadView.setOnReloadListener(new LoadingLayout.OnReloadListener() {
             @Override
             public void onReload(View v) {
@@ -23,35 +23,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mLoadView.setStatus(LoadingLayout.NONETWORK);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLoadView.setStatus(LoadingLayout.SUCCESS);
-//            }
-//        },1000);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLoadView.setStatus(LoadingLayout.EMPTY);
-//            }
-//        },2000);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLoadView.setStatus(LoadingLayout.ERROR);
-//            }
-//        },3000);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLoadView.setStatus(LoadingLayout.NONETWORK);
-//            }
-//        },4000);
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                mLoadView.setStatus(LoadingLayout.LOADING);
-//            }
-//        },5000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadView.setStatus(LoadingLayout.SUCCESS);
+            }
+        },1000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadView.setStatus(LoadingLayout.EMPTY);
+            }
+        },2000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadView.setStatus(LoadingLayout.ERROR);
+            }
+        },3000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadView.setStatus(LoadingLayout.NONETWORK);
+            }
+        },4000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mLoadView.setStatus(LoadingLayout.LOADING);
+            }
+        },5000);
     }
 }

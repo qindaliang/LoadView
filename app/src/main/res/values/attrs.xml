@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<declare-styleable name="LoadingLayout">
+    <attr name="isFirstView" format="boolean"/>
+    <attr name="pageBackgroumd" format="color|reference"/>
+</declare-styleable>
+</resources>

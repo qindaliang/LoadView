@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="text_color_light">#909090</color>
     <color name="loading_background">#f7f7f7</color>
+    <color name="default_loading_background">#f7f7f7</color>
 </resources>
